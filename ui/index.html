@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polylang-NLP | Multilingual AI Language Intelligence</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2314b8a6'/%3E%3Cstop offset='100%25' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='url(%23g)'/%3E%3Cg transform='translate(6,6)' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 8a2 2 0 0 1-2 2H7l-2.5 2.5V4a2 2 0 0 1 2-2h7.5a2 2 0 0 1 2 2z' opacity='0.55' fill='none'/%3E%3Cpath d='M21 13a2 2 0 0 1-2 2h-7.5L9 17.5V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z' fill='none'/%3E%3C/g%3E%3C/svg%3E" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="#">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 8a2 2 0 0 1-2 2H7l-2.5 2.5V4a2 2 0 0 1 2-2h7.5a2 2 0 0 1 2 2z" opacity="0.55"/>
+                        <path d="M21 13a2 2 0 0 1-2 2h-7.5L9 17.5V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                Polylang-NLP
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-page="sentiment">
+                            <i class="bi bi-bar-chart-line me-1"></i>Sentiment Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="qa">
+                            <i class="bi bi-chat-square-dots me-1"></i>Question Answering
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="stats">
+                            <i class="bi bi-speedometer2 me-1"></i>Usage Stats
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="about">
+                            <i class="bi bi-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-text ms-3">
+                    <span class="api-status-indicator" id="api-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Connecting...</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="hero-title">Language Intelligence Platform</h1>
+                    <p class="hero-subtitle">Production-grade NLP with multilingual sentiment analysis and retrieval-augmented question answering, powered by Hugging Face Transformers and FAISS vector search.</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Languages</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">92%</div>
+                            <div class="stat-label">EN Accuracy</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">~10ms</div>
+                            <div class="stat-label">GPU Latency</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid px-4 mt-4">
+
+        <!-- Sentiment Analysis Page -->
+        <div class="page active" id="sentiment-page">
+            <div class="row g-4">
+                <!-- Input Panel -->
+                <div class="col-lg-5">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Multilingual Sentiment Analyzer</span>
+                        </div>
+                        <div class="panel-body">
+                            <form id="sentiment-form">
+                                <div class="form-group mb-3">
+                                    <div class="toggle-group">
+                                        <input class="form-check-input" type="checkbox" id="sentiment-batch-mode">
+                                        <label class="form-check-label-custom" for="sentiment-batch-mode">
+                                            Batch mode (multiple texts)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label-custom" id="sentiment-text-label">Text Input</label>
+                                    <textarea class="form-control-custom" id="sentiment-text" rows="6" placeholder="Enter text to analyze... Try: 'The new AI product exceeded expectations but the documentation was confusing.'"></textarea>
+                                    <div class="form-hint" id="sentiment-batch-hint" style="display:none;">One text per line, each line is analyzed independently via /sentiment/batch</div>
+                                </div>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label-custom">Language</label>
+                                        <select class="form-select-custom" id="sentiment-language">
+                                            <option value="en">English</option>
+                                            <option value="es">Spanish</option>
+                                            <option value="fr">French</option>
+                                            <option value="de">German</option>
+                                            <option value="zh">Chinese</option>
+                                            <option value="multilingual">Multilingual</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label-custom">Analysis Mode</label>
+                                        <select class="form-select-custom" id="analysis-mode">
+                                            <option value="basic">Basic Sentiment</option>
+                                            <option value="aspect">Aspect-Based</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4" id="aspects-group" style="display:none;">
+                                    <label class="form-label-custom">Aspects to Analyze</label>
+                                    <input type="text" class="form-control-custom" id="sentiment-aspects" placeholder="e.g., price, quality, service, delivery">
+                                    <div class="form-hint">Comma-separated list of aspects</div>
+                                </div>
+                                <button type="submit" class="btn-primary-custom w-100" id="sentiment-submit-btn">
+                                    <i class="bi bi-cpu me-2"></i>Analyze Sentiment
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Quick Examples -->
+                    <div class="panel-card mt-3">
+                        <div class="panel-header">
+                            <i class="bi bi-lightning-charge"></i>
+                            <span>Quick Examples</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="example-chips">
+                                <button class="example-chip" onclick="loadExample('positive')">
+                                    <span class="chip-dot positive-dot"></span>Positive Review
+                                </button>
+                                <button class="example-chip" onclick="loadExample('negative')">
+                                    <span class="chip-dot negative-dot"></span>Negative Review
+                                </button>
+                                <button class="example-chip" onclick="loadExample('mixed')">
+                                    <span class="chip-dot neutral-dot"></span>Mixed Sentiment
+                                </button>
+                                <button class="example-chip" onclick="loadExample('german')">
+                                    <span class="chip-dot positive-dot"></span>German Text
+                                </button>
+                                <button class="example-chip" onclick="loadExample('french')">
+                                    <span class="chip-dot positive-dot"></span>French Text
+                                </button>
+                                <button class="example-chip" onclick="loadExample('aspect')">
+                                    <span class="chip-dot neutral-dot"></span>Aspect Example
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="col-lg-7">
+                    <div class="panel-card" id="sentiment-results-card">
+                        <div class="panel-header">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span>Analysis Results</span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="sentiment-results" class="results-placeholder">
+                                <div class="placeholder-content">
+                                    <i class="bi bi-bar-chart-line placeholder-icon"></i>
+                                    <p>Run an analysis to see results here</p>
+                                    <p class="placeholder-hint">Supports English, Spanish, French, German, and Chinese</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Language Model Info -->
+                    <div class="panel-card mt-3">
+                        <div class="panel-header">
+                            <i class="bi bi-diagram-3"></i>
+                            <span>Active Models</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="text-secondary" style="font-size:0.72rem; margin-bottom:10px;">Each model's own published benchmark score (its Hugging Face model card), not measured by this app instance.</p>
+                            <div class="model-grid">
+                                <div class="model-item">
+                                    <div class="model-lang">EN</div>
+                                    <div class="model-name">DistilBERT-SST2</div>
+                                    <div class="model-accuracy">~91%</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">DE</div>
+                                    <div class="model-name">German-Sentiment-BERT</div>
+                                    <div class="model-accuracy">~81%</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">FR</div>
+                                    <div class="model-name">DistilCamemBERT</div>
+                                    <div class="model-accuracy">~97%</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">ES</div>
+                                    <div class="model-name">BETO-Sentiment</div>
+                                    <div class="model-accuracy">~89%</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">ZH</div>
+                                    <div class="model-name">RoBERTa-JD-CN</div>
+                                    <div class="model-accuracy">~95%</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">ML</div>
+                                    <div class="model-name">BERT-Multilingual</div>
+                                    <div class="model-accuracy">5-lang</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Answering Page -->
+        <div class="page" id="qa-page" style="display: none;">
+            <div class="row g-4">
+                <!-- QA Input -->
+                <div class="col-lg-5">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <i class="bi bi-chat-square-dots"></i>
+                            <span>Question Answering</span>
+                        </div>
+                        <div class="panel-body">
+                            <form id="qa-form">
+                                <div class="form-group mb-3">
+                                    <label class="form-label-custom">Your Question</label>
+                                    <input type="text" class="form-control-custom" id="question-input" placeholder="e.g., What did Marie Curie research?">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <div class="toggle-group">
+                                        <input class="form-check-input" type="checkbox" id="use-context">
+                                        <label class="form-check-label-custom" for="use-context">
+                                            Provide specific context
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4" id="context-container" style="display: none;">
+                                    <label class="form-label-custom">Context Document</label>
+                                    <textarea class="form-control-custom" id="context-input" rows="6" placeholder="Paste the text context here..."></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary-custom w-100">
+                                    <i class="bi bi-search me-2"></i>Find Answer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Knowledge Base Management -->
+                    <div class="panel-card mt-3">
+                        <div class="panel-header">
+                            <i class="bi bi-database"></i>
+                            <span>Knowledge Base</span>
+                        </div>
+                        <div class="panel-body">
+                            <form id="document-form">
+                                <div class="form-group mb-3">
+                                    <div class="toggle-group">
+                                        <input class="form-check-input" type="checkbox" id="document-batch-mode">
+                                        <label class="form-check-label-custom" for="document-batch-mode">
+                                            Batch add (multiple documents)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label-custom" id="document-text-label">Document Content</label>
+                                    <textarea class="form-control-custom" id="document-text" rows="4" placeholder="Add a document to the knowledge base..."></textarea>
+                                    <div class="form-hint" id="document-batch-hint" style="display:none;">Separate documents with a line containing only ---, all added in one call via /documents/batch</div>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <input type="text" class="form-control-custom" id="document-title" placeholder="Document title">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" class="form-control-custom" id="document-category" placeholder="Category">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-secondary-custom w-100" id="document-submit-btn">
+                                    <i class="bi bi-plus-circle me-2"></i>Add to Knowledge Base
+                                </button>
+                            </form>
+                            <div id="kb-notification" class="kb-notification" style="display:none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Batch Question Answering -->
+                    <div class="panel-card mt-3">
+                        <div class="panel-header">
+                            <i class="bi bi-list-check"></i>
+                            <span>Batch Question Answering</span>
+                        </div>
+                        <div class="panel-body">
+                            <form id="batch-question-form">
+                                <div class="form-group mb-3">
+                                    <label class="form-label-custom">Questions (one per line)</label>
+                                    <textarea class="form-control-custom" id="batch-question-text" rows="4" placeholder="Who developed the theory of relativity?&#10;What did Marie Curie research?"></textarea>
+                                    <div class="form-hint">Each question is answered independently via /question/batch</div>
+                                </div>
+                                <button type="submit" class="btn-secondary-custom w-100">
+                                    <i class="bi bi-list-check me-2"></i>Answer All
+                                </button>
+                            </form>
+                            <div id="batch-question-results" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QA Results -->
+                <div class="col-lg-7">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <i class="bi bi-chat-square-text"></i>
+                            <span>Answer</span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="qa-results" class="results-placeholder">
+                                <div class="placeholder-content">
+                                    <i class="bi bi-chat-square-dots placeholder-icon"></i>
+                                    <p>Ask a question to get an answer</p>
+                                    <p class="placeholder-hint">Answers are retrieved from the knowledge base using FAISS semantic search + RoBERTa QA</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Architecture Diagram -->
+                    <div class="panel-card mt-3">
+                        <div class="panel-header">
+                            <i class="bi bi-diagram-2"></i>
+                            <span>RAG Architecture</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="arch-diagram">
+                                <div class="arch-flow">
+                                    <div class="arch-node input-node">
+                                        <i class="bi bi-question-circle"></i>
+                                        <span>Question</span>
+                                    </div>
+                                    <div class="arch-arrow">&#8594;</div>
+                                    <div class="arch-node process-node">
+                                        <i class="bi bi-vector-pen"></i>
+                                        <span>MiniLM Embeddings</span>
+                                    </div>
+                                    <div class="arch-arrow">&#8594;</div>
+                                    <div class="arch-node store-node">
+                                        <i class="bi bi-database"></i>
+                                        <span>FAISS Search</span>
+                                    </div>
+                                </div>
+                                <div class="arch-flow mt-2">
+                                    <div class="arch-node output-node">
+                                        <i class="bi bi-chat-right-text"></i>
+                                        <span>Final Answer</span>
+                                    </div>
+                                    <div class="arch-arrow">&#8592;</div>
+                                    <div class="arch-node process-node">
+                                        <i class="bi bi-cpu"></i>
+                                        <span>RoBERTa QA</span>
+                                    </div>
+                                    <div class="arch-arrow">&#8592;</div>
+                                    <div class="arch-node retrieve-node">
+                                        <i class="bi bi-file-text"></i>
+                                        <span>Top-K Context</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usage Stats Page -->
+        <div class="page" id="stats-page" style="display: none;">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Live Usage Statistics</span>
+                            <button class="btn-secondary-custom ms-auto" style="width:auto;padding:6px 14px;" onclick="loadStats()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                            </button>
+                        </div>
+                        <div class="panel-body">
+                            <div id="stats-summary" class="model-grid">
+                                <div class="model-item">
+                                    <div class="model-lang">Uptime</div>
+                                    <div class="model-name" id="stat-uptime">-</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">Sentiment</div>
+                                    <div class="model-name" id="stat-sentiment-requests">-</div>
+                                    <div class="model-accuracy" id="stat-sentiment-conf">-</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">QA Questions</div>
+                                    <div class="model-name" id="stat-qa-requests">-</div>
+                                    <div class="model-accuracy" id="stat-qa-rate">-</div>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-lang">Knowledge Base</div>
+                                    <div class="model-name" id="stat-kb-docs">-</div>
+                                    <div class="model-accuracy">documents</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mt-1">
+                        <div class="col-lg-6">
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <i class="bi bi-translate"></i>
+                                    <span>Sentiment Requests by Language</span>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="stats-by-language" class="results-placeholder">
+                                        <div class="placeholder-content">
+                                            <i class="bi bi-bar-chart-line placeholder-icon"></i>
+                                            <p>No sentiment requests yet</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>Recent QA Queries</span>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="stats-recent-queries" class="results-placeholder">
+                                        <div class="placeholder-content">
+                                            <i class="bi bi-chat-square-dots placeholder-icon"></i>
+                                            <p>No questions asked yet</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div class="page" id="about-page" style="display: none;">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <i class="bi bi-info-circle"></i>
+                            <span>About Polylang-NLP</span>
+                        </div>
+                        <div class="panel-body">
+                            <h4 class="about-title">Production NLP Platform for European Enterprises</h4>
+                            <p class="about-description">Polylang-NLP is a production-grade Natural Language Processing system combining multilingual sentiment analysis with retrieval-augmented question answering. Built for enterprises handling multilingual customer data, particularly relevant for German and European companies operating across language boundaries.</p>
+
+                            <h5 class="section-title mt-4">Core Capabilities</h5>
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <i class="bi bi-translate feature-icon"></i>
+                                    <div>
+                                        <strong>Multilingual Sentiment</strong>
+                                        <p>Analyze customer sentiment in EN, DE, FR, ES, ZH using language-specific BERT models fine-tuned on domain corpora.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="bi bi-layers feature-icon"></i>
+                                    <div>
+                                        <strong>Aspect-Based Analysis</strong>
+                                        <p>Identify sentiment per business aspect: price, quality, service, delivery. Enables granular product intelligence.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="bi bi-search feature-icon"></i>
+                                    <div>
+                                        <strong>RAG Question Answering</strong>
+                                        <p>FAISS-powered semantic search retrieves relevant document chunks, then RoBERTa extracts precise answers.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="bi bi-database-add feature-icon"></i>
+                                    <div>
+                                        <strong>Dynamic Knowledge Base</strong>
+                                        <p>Add documents at runtime without retraining. Supports instant knowledge base expansion for enterprise use cases.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="section-title mt-4">Performance Benchmarks</h5>
+                            <p class="text-secondary" style="font-size:0.72rem; margin-bottom:8px;">Each row is that model's own published benchmark score (its model card), not a live evaluation run by this app.</p>
+                            <div class="benchmark-table">
+                                <div class="benchmark-row header">
+                                    <span>Language / Metric</span>
+                                    <span>Accuracy</span>
+                                    <span>F1 Score</span>
+                                    <span>Dataset</span>
+                                </div>
+                                <div class="benchmark-row">
+                                    <span>English (EN)</span>
+                                    <span class="score-high">~91%</span>
+                                    <span class="score-high">~91%</span>
+                                    <span>SST-2</span>
+                                </div>
+                                <div class="benchmark-row">
+                                    <span>Spanish (ES)</span>
+                                    <span class="score-high">~89%</span>
+                                    <span class="score-high">~88%</span>
+                                    <span>TASS</span>
+                                </div>
+                                <div class="benchmark-row">
+                                    <span>French (FR)</span>
+                                    <span class="score-high">~97%</span>
+                                    <span class="score-high">~97%</span>
+                                    <span>Allocine</span>
+                                </div>
+                                <div class="benchmark-row">
+                                    <span>German (DE)</span>
+                                    <span class="score-med">~81%</span>
+                                    <span class="score-med">~80%</span>
+                                    <span>GermEval</span>
+                                </div>
+                                <div class="benchmark-row">
+                                    <span>QA Exact Match</span>
+                                    <span class="score-med">78.6%</span>
+                                    <span class="score-high">81.3%</span>
+                                    <span>SQuAD v2.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <i class="bi bi-stack"></i>
+                            <span>Tech Stack</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tech-stack-list">
+                                <div class="tech-category">ML / NLP</div>
+                                <div class="tech-item"><i class="bi bi-fire"></i> PyTorch</div>
+                                <div class="tech-item"><i class="bi bi-robot"></i> Hugging Face Transformers</div>
+                                <div class="tech-item"><i class="bi bi-vector-pen"></i> Sentence-Transformers</div>
+                                <div class="tech-item"><i class="bi bi-database"></i> FAISS Vector DB</div>
+
+                                <div class="tech-category mt-3">Backend</div>
+                                <div class="tech-item"><i class="bi bi-lightning"></i> FastAPI</div>
+                                <div class="tech-item"><i class="bi bi-server"></i> Uvicorn ASGI</div>
+                                <div class="tech-item"><i class="bi bi-boxes"></i> Docker Compose</div>
+
+                                <div class="tech-category mt-3">Text Processing</div>
+                                <div class="tech-item"><i class="bi bi-type"></i> spaCy</div>
+                                <div class="tech-item"><i class="bi bi-braces"></i> NLTK</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-card mt-3">
+                        <div class="panel-header">
+                            <i class="bi bi-person-circle"></i>
+                            <span>Author</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="author-card">
+                                <div class="author-monogram">RL</div>
+                                <div class="author-info">
+                                    <div class="author-name">Rayen Lassoued</div>
+                                    <div class="author-title">AI / ML Engineer</div>
+                                    <div class="author-links">
+                                        <a href="https://github.com/Hamilas" target="_blank" class="author-link">
+                                            <i class="bi bi-github"></i> Hamilas
+                                        </a>
+                                        <a href="https://www.linkedin.com/in/lassoued-rayen/" target="_blank" class="author-link">
+                                            <i class="bi bi-linkedin"></i> lassoued-rayen
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container-fluid px-4">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="brand-logo-sm">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 8a2 2 0 0 1-2 2H7l-2.5 2.5V4a2 2 0 0 1 2-2h7.5a2 2 0 0 1 2 2z" opacity="0.55"/>
+                            <path d="M21 13a2 2 0 0 1-2 2h-7.5L9 17.5V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <span>Polylang-NLP</span>
+                </div>
+                <div class="footer-info">
+                    Rayen Lassoued |
+                    <a href="https://github.com/Hamilas" target="_blank">github.com/Hamilas</a> |
+                    <a href="https://www.linkedin.com/in/lassoued-rayen/" target="_blank">https://www.linkedin.com/in/lassoued-rayen/</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

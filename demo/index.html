@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Polylang-NLP | NLP Text Analysis Pipeline</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2314b8a6'/%3E%3Cstop offset='100%25' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='url(%23g)'/%3E%3Cg transform='translate(6,6)' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 8a2 2 0 0 1-2 2H7l-2.5 2.5V4a2 2 0 0 1 2-2h7.5a2 2 0 0 1 2 2z' opacity='0.55' fill='none'/%3E%3Cpath d='M21 13a2 2 0 0 1-2 2h-7.5L9 17.5V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z' fill='none'/%3E%3C/g%3E%3C/svg%3E" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: #e2e8f0; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .gradient-bg { background: #111930; }
+  .card { background: #111930; border: 1px solid #1e2d54; border-radius: 14px; }
+  .card-hover { transition: all .25s ease; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 30px -6px rgba(45,212,191,0.15); }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+  .badge-teal { background: rgba(45,212,191,0.12); color: #2dd4bf; border: 1px solid rgba(45,212,191,0.3); }
+  .badge-green { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+  .badge-red { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+  .badge-amber { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+  .badge-indigo { background: rgba(129,140,248,0.12); color: #818cf8; border: 1px solid rgba(129,140,248,0.3); }
+  .typing-cursor::after { content: '|'; animation: blink 1s infinite; color: #2dd4bf; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+  .bar-fill { transition: width 1.2s ease; height: 8px; border-radius: 4px; }
+  .tab-btn.active { background: #0d9488; color: #04201c; }
+  .tab-btn { transition: all .2s ease; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: #1e2d54; border-radius: 4px; }
+</style>
+</head>
+<body class="text-slate-200">
+
+<!-- Header -->
+<header class="gradient-bg border-b border-[#1e2d54]">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="flex items-center justify-between flex-wrap gap-6">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:#14b8a6;">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 8a2 2 0 0 1-2 2H7l-2.5 2.5V4a2 2 0 0 1 2-2h7.5a2 2 0 0 1 2 2z" opacity="0.55"/>
+            <path d="M21 13a2 2 0 0 1-2 2h-7.5L9 17.5V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold tracking-tight">Polylang<span class="text-teal-300">-NLP</span></h1>
+          <p class="text-slate-300 text-sm mt-0.5">Multilingual Sentiment Analysis &amp; Retrieval-Augmented Question Answering</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge badge-teal">Transformers</span>
+        <span class="badge badge-indigo">FAISS RAG</span>
+        <span class="badge badge-green">5 Languages</span>
+        <span class="badge badge-amber">FastAPI</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 py-10 space-y-10">
+
+  <!-- What it does -->
+  <section class="card p-6">
+    <h2 class="text-xl font-bold text-white mb-3">What this project does</h2>
+    <p class="text-slate-300 leading-relaxed">
+      Polylang-NLP is a language intelligence platform for companies that handle customer
+      feedback, reviews, and documents across multiple languages. It does two things:
+    </p>
+    <ul class="mt-3 space-y-2 text-slate-300 list-disc list-inside">
+      <li><strong class="text-teal-300">Multilingual Sentiment Analysis</strong>: understands whether
+        a review is positive, negative, or mixed in English, German, French, Spanish, or Chinese,
+        and can break sentiment down per topic ("aspect") like price, service, or battery life.</li>
+      <li><strong class="text-teal-300">Retrieval-Augmented Question Answering</strong>: lets you build
+        a knowledge base of documents, then ask natural-language questions. The system searches the
+        knowledge base semantically (FAISS + sentence embeddings) and extracts the exact answer
+        from the most relevant document.</li>
+    </ul>
+    <p class="mt-3 text-slate-400 text-sm">
+      This is a <strong>static demo</strong>, all results below were pre-computed by running the
+      real models locally and saving the outputs. No backend is required to view this page.
+    </p>
+  </section>
+
+  <!-- Architecture -->
+  <section class="card p-6">
+    <h2 class="text-xl font-bold text-white mb-4">Architecture</h2>
+    <img src="architecture.svg" alt="Polylang-NLP Architecture" style="width:100%;max-width:700px;display:block;margin:0 auto;border-radius:8px;" />
+    <p class="mono text-xs sm:text-sm text-slate-400 mt-4">GET /stats -&gt; live usage counters: requests, languages, avg confidence, document count, recent QA queries</p>
+  </section>
+
+  <!-- Tabs -->
+  <section>
+    <div class="flex gap-2 mb-4 flex-wrap">
+      <button class="tab-btn active px-4 py-2 rounded-lg font-semibold text-sm card" data-tab="sentiment" onclick="switchTab('sentiment')">Sentiment Analysis</button>
+      <button class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm card" data-tab="aspect" onclick="switchTab('aspect')">Aspect-Based Sentiment</button>
+      <button class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm card" data-tab="qa" onclick="switchTab('qa')">Question Answering</button>
+      <button class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm card" data-tab="stats" onclick="switchTab('stats')">Usage Stats</button>
+    </div>
+
+    <!-- Sentiment tab -->
+    <div id="tab-sentiment" class="tab-content space-y-4">
+      <div class="card p-5 card-hover">
+        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <span class="badge badge-indigo">EN</span>
+          <span id="sent-result-1"></span>
+        </div>
+        <p class="text-slate-200 mono text-sm" id="sent-text-1"></p>
+      </div>
+      <div class="card p-5 card-hover">
+        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <span class="badge badge-indigo">DE</span>
+          <span id="sent-result-2"></span>
+        </div>
+        <p class="text-slate-200 mono text-sm" id="sent-text-2"></p>
+      </div>
+      <div class="card p-5 card-hover">
+        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <span class="badge badge-indigo">FR</span>
+          <span id="sent-result-3"></span>
+        </div>
+        <p class="text-slate-200 mono text-sm" id="sent-text-3"></p>
+      </div>
+    </div>
+
+    <!-- Aspect tab -->
+    <div id="tab-aspect" class="tab-content hidden space-y-4">
+      <div class="card p-5">
+        <p class="text-slate-200 mb-4">
+          "The hotel had beautiful views and the staff was friendly, but the rooms were small
+          and the food was terrible."
+        </p>
+        <div class="space-y-3" id="aspect-bars"></div>
+      </div>
+    </div>
+
+    <!-- QA tab -->
+    <div id="tab-qa" class="tab-content hidden space-y-4">
+      <div class="card p-5">
+        <div class="text-slate-400 text-sm mb-1">Question</div>
+        <div class="font-semibold text-white mb-3" id="qa-question-1">Who developed the theory of relativity?</div>
+        <div class="text-slate-400 text-sm mb-1">Answer</div>
+        <div class="mono text-teal-300 text-lg" id="qa-answer-1"></div>
+        <div class="mt-2 text-xs text-slate-500" id="qa-meta-1"></div>
+      </div>
+      <div class="card p-5">
+        <div class="text-slate-400 text-sm mb-1">Question</div>
+        <div class="font-semibold text-white mb-3">What is Natural Language Processing concerned with?</div>
+        <div class="text-slate-400 text-sm mb-1">Answer</div>
+        <div class="mono text-teal-300 text-lg" id="qa-answer-2"></div>
+        <div class="mt-2 text-xs text-slate-500" id="qa-meta-2"></div>
+      </div>
+      <div class="card p-5">
+        <div class="text-slate-400 text-sm mb-1">Question</div>
+        <div class="font-semibold text-white mb-3">Who is the president of Mars?</div>
+        <div class="text-slate-400 text-sm mb-1">Answer</div>
+        <div class="mono text-amber-400 text-lg" id="qa-answer-3"></div>
+        <div class="mt-2 text-xs text-slate-500" id="qa-meta-3"></div>
+      </div>
+    </div>
+
+    <!-- Stats tab -->
+    <div id="tab-stats" class="tab-content hidden space-y-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-teal-300">128</div>
+          <div class="text-slate-400 text-xs mt-1">Sentiment requests</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-teal-300">89.6%</div>
+          <div class="text-slate-400 text-xs mt-1">Avg. sentiment confidence</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-indigo-300">42</div>
+          <div class="text-slate-400 text-xs mt-1">QA questions answered</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-indigo-300">81.0%</div>
+          <div class="text-slate-400 text-xs mt-1">QA answer rate</div>
+        </div>
+      </div>
+      <div class="card p-5">
+        <h3 class="font-semibold text-white mb-3">Sentiment requests by language</h3>
+        <div class="space-y-3" id="stats-lang-bars"></div>
+      </div>
+      <div class="card p-5">
+        <h3 class="font-semibold text-white mb-3">/stats endpoint (live JSON example)</h3>
+        <pre class="mono text-xs text-slate-400 bg-[#0a0f1e] p-4 rounded-lg border border-[#1e2d54] overflow-x-auto">{
+  "uptime_seconds": 5421.3,
+  "sentiment_requests": 128,
+  "sentiment_by_language": { "en": 71, "de": 22, "fr": 18, "es": 11, "zh": 6 },
+  "sentiment_avg_confidence": 0.896,
+  "qa_requests": 42,
+  "qa_answer_rate": 0.81,
+  "qa_avg_confidence": 0.734,
+  "knowledge_base_documents": 12,
+  "recent_queries": [
+    { "question": "Who developed the theory of relativity?",
+      "answer": "Albert Einstein", "confidence": 0.92,
+      "has_answer": true, "timestamp": "2026-06-13T10:42:11Z" }
+  ]
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech stack -->
+  <section class="card p-6">
+    <h2 class="text-xl font-bold text-white mb-4">Tech Stack</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+      <div class="card p-3 text-center">PyTorch</div>
+      <div class="card p-3 text-center">HuggingFace Transformers</div>
+      <div class="card p-3 text-center">Sentence-Transformers</div>
+      <div class="card p-3 text-center">FAISS</div>
+      <div class="card p-3 text-center">FastAPI</div>
+      <div class="card p-3 text-center">Uvicorn</div>
+      <div class="card p-3 text-center">Bootstrap 5</div>
+      <div class="card p-3 text-center">Docker Compose</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-[#1e2d54] py-8 mt-6">
+  <div class="max-w-6xl mx-auto px-6 text-center text-slate-400 text-sm">
+    Rayen Lassoued |
+    <a href="https://github.com/Hamilas" target="_blank" class="text-teal-300 hover:underline">github.com/Hamilas</a> |
+    <a href="https://www.linkedin.com/in/lassoued-rayen/" target="_blank" class="text-teal-300 hover:underline">https://www.linkedin.com/in/lassoued-rayen/</a>
+  </div>
+</footer>
+
+<script>
+const examples = {
+  sent1: {
+    text: "The new smartphone has an excellent camera and battery life, but the user interface is a bit confusing. Overall, I'm satisfied with my purchase.",
+    sentiment: "positive", score: 0.78, confidence: 0.91
+  },
+  sent2: {
+    text: "Das Hotel war sehr sauber und komfortabel. Das Personal war freundlich, aber das Frühstück war nicht so gut wie erwartet.",
+    sentiment: "neutral", score: 0.5, confidence: 0.84
+  },
+  sent3: {
+    text: "Le film était incroyable, avec des effets spéciaux impressionnants et une histoire captivante. Cependant, certaines scènes étaient trop longues.",
+    sentiment: "positive", score: 0.71, confidence: 0.87
+  }
+};
+
+const aspects = [
+  { name: "views", sentiment: "positive", score: 0.85 },
+  { name: "staff", sentiment: "positive", score: 0.78 },
+  { name: "rooms", sentiment: "negative", score: 0.32 },
+  { name: "food", sentiment: "negative", score: 0.15 }
+];
+
+const qaExamples = {
+  qa1: { answer: "Albert Einstein", confidence: 0.92, has_answer: true, source: "Albert Einstein (physics)" },
+  qa2: { answer: "the interactions between computers and human language", confidence: 0.81, has_answer: true, source: "Natural Language Processing (computer science)" },
+  qa3: { answer: "", confidence: 0.004, has_answer: false, source: null }
+};
+
+const langStats = { en: 71, de: 22, fr: 18, es: 11, zh: 6 };
+
+function badgeForSentiment(s) {
+  if (s === "positive") return '<span class="badge badge-green">positive</span>';
+  if (s === "negative") return '<span class="badge badge-red">negative</span>';
+  return '<span class="badge badge-amber">neutral</span>';
+}
+
+function typeText(elementId, text, speed = 18) {
+  const el = document.getElementById(elementId);
+  el.textContent = '';
+  el.classList.add('typing-cursor');
+  let i = 0;
+  function step() {
+    if (i <= text.length) {
+      el.textContent = text.slice(0, i);
+      i++;
+      setTimeout(step, speed);
+    } else {
+      el.classList.remove('typing-cursor');
+    }
+  }
+  step();
+}
+
+function renderSentimentCards() {
+  Object.entries(examples).forEach(([key, ex], idx) => {
+    const n = idx + 1;
+    document.getElementById(`sent-result-${n}`).innerHTML =
+      `${badgeForSentiment(ex.sentiment)} <span class="text-slate-400 text-xs ms-2">score ${ex.score.toFixed(2)} · conf ${(ex.confidence*100).toFixed(0)}%</span>`;
+    typeText(`sent-text-${n}`, ex.text);
+  });
+}
+
+function renderAspectBars() {
+  const container = document.getElementById('aspect-bars');
+  container.innerHTML = aspects.map(a => {
+    const color = a.sentiment === 'positive' ? '#4ade80' : a.sentiment === 'negative' ? '#f87171' : '#fbbf24';
+    return `
+      <div>
+        <div class="flex justify-between text-sm mb-1">
+          <span class="capitalize">${a.name}</span>
+          <span>${badgeForSentiment(a.sentiment)} <span class="text-slate-400 ml-1">${a.score.toFixed(2)}</span></span>
+        </div>
+        <div class="bg-[#0a0f1e] rounded">
+          <div class="bar-fill" style="width:0%; background:${color};" data-width="${a.score*100}%"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('#aspect-bars .bar-fill').forEach(el => {
+        el.style.width = el.dataset.width;
+      });
+    }, 100);
+  });
+}
+
+function renderQA() {
+  Object.entries(qaExamples).forEach(([key, ex], idx) => {
+    const n = idx + 1;
+    const answerEl = document.getElementById(`qa-answer-${n}`);
+    const metaEl = document.getElementById(`qa-meta-${n}`);
+    if (ex.has_answer) {
+      typeText(`qa-answer-${n}`, ex.answer, 30);
+      metaEl.textContent = `confidence ${(ex.confidence*100).toFixed(1)}% · source: ${ex.source}`;
+    } else {
+      answerEl.textContent = 'No confident answer found in knowledge base';
+      answerEl.classList.remove('text-teal-300');
+      answerEl.classList.add('text-amber-400');
+      metaEl.textContent = `confidence ${(ex.confidence*100).toFixed(1)}%, below threshold (0.01)`;
+    }
+  });
+}
+
+function renderLangBars() {
+  const container = document.getElementById('stats-lang-bars');
+  const max = Math.max(...Object.values(langStats));
+  container.innerHTML = Object.entries(langStats).map(([lang, count]) => `
+    <div>
+      <div class="flex justify-between text-sm mb-1">
+        <span>${lang.toUpperCase()}</span>
+        <span>${count}</span>
+      </div>
+      <div class="bg-[#0a0f1e] rounded">
+        <div class="bar-fill" style="width:0%; background:#2dd4bf;" data-width="${(count/max)*100}%"></div>
+      </div>
+    </div>
+  `).join('');
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('#stats-lang-bars .bar-fill').forEach(el => {
+        el.style.width = el.dataset.width;
+      });
+    }, 100);
+  });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.remove('hidden');
+  document.querySelector(`.tab-btn[data-tab="${tab}"]`).classList.add('active');
+  if (tab === 'aspect') renderAspectBars();
+  if (tab === 'stats') renderLangBars();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderSentimentCards();
+  renderQA();
+});
+</script>
+
+</body>
+</html>

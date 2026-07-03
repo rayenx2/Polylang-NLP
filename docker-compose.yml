@@ -1,0 +1,48 @@
+
+services:
+  nlp-api:
+    build: .
+    image: polylang-nlp-api:latest
+    ports:
+      - "8043:8000"
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - HF_HOME=/app/models/huggingface
+      - TRANSFORMERS_CACHE=/app/models/huggingface
+      - SENTIMENT_DEFAULT_LANGUAGE=${SENTIMENT_DEFAULT_LANGUAGE:-en}
+      - QA_MODEL=${QA_MODEL:-deepset/roberta-base-squad2}
+      - RETRIEVER_MODEL=${RETRIEVER_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+    restart: unless-stopped
+    command: python run.py --host 0.0.0.0 --port 8000
+    # torch auto-detects CUDA at runtime and falls back to CPU when no GPU
+    # is present. GPU passthrough is opt-in: uncomment the block below on a
+    # host with nvidia-container-toolkit installed (e.g. the RTX 3050 box).
+    # Reserving an nvidia device unconditionally makes Docker itself refuse
+    # to start this container on machines without the NVIDIA runtime.
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 120s
+
+  nlp-ui:
+    image: nginx:alpine
+    ports:
+      - "8044:80"
+    volumes:
+      - ./ui:/usr/share/nginx/html
+    depends_on:
+      - nlp-api
+    restart: unless-stopped
